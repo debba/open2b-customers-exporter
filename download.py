@@ -43,11 +43,16 @@ class NinoDownloader:
     session = False
     client_url = False
     json = False
+    chunk = -1
     users = []
 
-    def __init__(self, username, password, client_url):
+    def __init__(self, username, password, client_url, chunk):
 
         self.WEBSITE_URL = client_url
+        self.chunk = int(chunk)
+
+        if self.chunk != -1:
+            log("info", "Chunk mode, they'll be created json files every %d pages" % self.chunk)
 
         body = {
             'Username': username,
@@ -151,6 +156,12 @@ class NinoDownloader:
             }
             self.users.append(user)
 
+    def createFile(self, pos):
+        log("info", "JSON creation with data")
+        with open("downloads/results_%d.json" % pos, 'w+') as f:
+            json.dump(self.users, f, sort_keys=True, indent=4, ensure_ascii=False)
+        self.users = [];
+
     def downloadAnags(self):
         log("info", "Open Json File")
 
@@ -169,11 +180,13 @@ class NinoDownloader:
                 "class" : "gridNoRowsMessage"
             }) is not None:
                 log("info", "Yeahhh ended now.")
+                self.createFile("last")
                 break
 
             self.downloadFromTable(table, page)
-            page = page+1
 
-        log("info", "JSON creation with data")
-        with open("downloads/results_" + str(time.time()) + ".json", 'w+') as f:
-            json.dump(self.users, f, sort_keys=True, indent=4,ensure_ascii=False)
+            if self.chunk != -1:
+                if page%self.chunk == 0:
+                    self.createFile((page / self.chunk))
+
+            page = page + 1
