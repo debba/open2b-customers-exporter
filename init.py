@@ -14,11 +14,11 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "hu:p:l:c", ["user=", "password=", "link="])
     except getopt.GetoptError:
-        log('error', 'init.py -u <user> -p <password> -l <link> [-c]')
+        log('error', 'init.py -u <user> -p <password> -l <link>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            log('info', 'init.py -u <user> -p <password> -l <link> [-c]')
+            log('info', 'init.py -u <user> -p <password> -l <link>')
             sys.exit()
         elif opt in ("-u", "--user"):
             username = arg

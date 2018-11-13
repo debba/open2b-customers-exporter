@@ -5,7 +5,7 @@ import os
 import requests
 import time
 from bs4 import BeautifulSoup
-import json, codecs
+import json
 
 def log(type, msg):
     print("[B2-dl] [%s] : %s" % (type, msg))
