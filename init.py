@@ -12,7 +12,7 @@ def main(argv):
     link = ''
     csv = False
     try:
-        opts, args = getopt.getopt(argv, "hu:p:l:c", ["user=", "password=", "link=", "csv="])
+        opts, args = getopt.getopt(argv, "hu:p:l:c", ["user=", "password=", "link="])
     except getopt.GetoptError:
         log('error', 'init.py -u <user> -p <password> -l <link> [-c]')
         sys.exit(2)
@@ -26,16 +26,14 @@ def main(argv):
             password = arg
         elif opt in ("-l", "--link"):
             link = arg
-        elif opt in ("-c", "--csv"):
-            csv = True
 
     if username == '' or password == '' or link == '':
-        log('error', 'init.py -u <user> -p <password> -l <link> [-c]')
+        log('error', 'init.py -u <user> -p <password> -l <link>')
         sys.exit()
 
     try:
         gtd = ND(username, password, link)
-        gtd.downloadAnags(output_csv=csv)
+        gtd.downloadAnags()
     except NDErr as err:
         log("Error", err)
 
